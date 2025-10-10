@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://budxylqe7vgvt"]
+
+[ext_resource type="PackedScene" uid="uid://gh2447tlpdnd" path="res://Prefabs/player.tscn" id="1_a22an"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource("1_a22an")]
+position = Vector2(556, 106)
+maxSpeed = 150.0
