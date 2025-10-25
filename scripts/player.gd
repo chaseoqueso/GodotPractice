@@ -5,13 +5,15 @@ extends CharacterBody2D
 @export var gravity: float = 200
 @export var jumpVelocity: float = 100
 
-var is_attacking = false
-var is_climbing = false
+var initialGravity
+
+func _ready() -> void:
+    initialGravity = gravity
 
 func _process(delta: float) -> void:
     var inputX: float = Input.get_action_strength("right") - Input.get_action_strength("left")
     # if !Input.is_action_just_released("jump"):
-    if !is_attacking:
+    if !PlayerGlobals.is_attacking:
         if inputX < 0:
             $AnimatedSprite2D.flip_h = true
             $AnimatedSprite2D.play("run")
@@ -23,21 +25,41 @@ func _process(delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
     var inputX: float = Input.get_action_strength("right") - Input.get_action_strength("left")
+    if inputX == 0:
+        if abs(velocity.x) <= accel * delta:
+            velocity.x = 0
+        else:
+            inputX = -sign(velocity.x)
+
     velocity.x += inputX * accel * delta
     if abs(velocity.x) > maxSpeed:
         velocity.x = sign(velocity.x) * maxSpeed
+
+    
+    
+    if PlayerGlobals.can_climb:
+        if Input.is_action_pressed("up"):
+            $AnimatedSprite2D.play("climb")	
+            gravity = 0
+            velocity.y = -160
+        elif gravity == 0:
+            velocity.y = 0
+    else:
+        gravity = initialGravity
+
     velocity.y += gravity * delta
     move_and_slide()
 
 func _input(event):
     #on attack
     if event.is_action_pressed("attack"):
-        is_attacking = true
+        PlayerGlobals.is_attacking = true
         $AnimatedSprite2D.play("attack")
 
-    if event.is_action_pressed("jump") and is_on_floor():
+    if event.is_action_pressed("jump") and (is_on_floor() or (PlayerGlobals.can_climb and gravity == 0)):
         velocity.y = -jumpVelocity
+        gravity = initialGravity
         $AnimatedSprite2D.play("jump")
 
 func _on_animated_sprite_2d_animation_finished() -> void:
-    is_attacking = false
+    PlayerGlobals.is_attacking = false

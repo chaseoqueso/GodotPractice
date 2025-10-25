@@ -15,6 +15,10 @@ run/main_scene="uid://budxylqe7vgvt"
 config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+PlayerGlobals="*res://Scripts/player_globals.gd"
+
 [display]
 
 window/size/mode=2
@@ -23,6 +27,10 @@ window/stretch/mode="viewport"
 [dotnet]
 
 project/assembly_name="New Game Project"
+
+[global_group]
+
+player=""
 
 [input]
 
