@@ -1,4 +1,4 @@
-extends Area2D
+extends StaticBody2D
 
 #platform movement states
 enum State {WAIT_AT_BOTTOM, MOVING_UP, WAIT_AT_TOP, MOVING_DOWN}
